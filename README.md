@@ -113,8 +113,9 @@ exits non-zero — which is exactly how you would wire it into a pipeline.
 ## CI
 
 `.github/workflows/ci.yml` runs the Playwright suite, starts the site, measures both journeys, and
-uploads the JSON reports as an artifact. The legacy run uses `continue-on-error: true` because
-failing is the demonstration.
+uploads the JSON reports as an artifact. On pull requests, the optimised journey is compared with
+the latest successful report from the target branch and published as a single updating PR comment.
+The legacy run uses `continue-on-error: true` because failing is the demonstration.
 
 ## Layout
 

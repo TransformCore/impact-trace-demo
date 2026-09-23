@@ -5,6 +5,14 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
 jobs:
   test-and-measure:
     runs-on: ubuntu-latest
@@ -31,20 +39,67 @@ jobs:
             sleep 1
           done
 
-      # The same journeys the Playwright specs assert on, measured for carbon.
+      - name: Download the latest base-branch report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref || github.ref_name }}
+        run: |
+          run_id=$(gh run list \
+            --workflow ci.yml \
+            --branch "$BASE_BRANCH" \
+            --event push \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId // empty')
+
+          if [ -n "$run_id" ]; then
+            gh run download "$run_id" \
+              --name impact-trace-reports \
+              --dir baseline || true
+          fi
+
+          if [ ! -f baseline/journey-optimised.json ]; then
+            echo "No previous report found for $BASE_BRANCH; running without a baseline."
+          fi
+
+      # The same journey the Playwright spec asserts on, measured for carbon.
       - name: ImpactTrace - optimised checkout
-        run: npm run impact:journey:optimised
+        run: |
+          npm run reports:dir
+          baseline_args=()
+          if [ -f baseline/journey-optimised.json ]; then
+            baseline_args=(--baseline baseline/journey-optimised.json)
+          fi
+
+          npx impact-trace run impact-trace/journeys/optimisedCheckout.ts \
+            --compare-cache \
+            --output reports/journey-optimised.json \
+            --format github-pr \
+            "${baseline_args[@]}" \
+            > reports/pr-comment.md
 
       # Expected to fail its budgets: that is the point of the legacy storefront.
       - name: ImpactTrace - legacy checkout
         run: npm run impact:journey:legacy
         continue-on-error: true
 
-      - name: ImpactTrace - PR comment output
-        run: npx impact-trace run impact-trace/journeys/optimisedCheckout.ts --format github-pr
+      - name: Prepare PR comment metadata
+        if: github.event_name == 'pull_request'
+        run: echo '${{ github.event.pull_request.number }}' > reports/pr-number.txt
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: impact-trace-pr-comment
+          path: |
+            reports/pr-comment.md
+            reports/pr-number.txt
+          retention-days: 7
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: impact-trace-reports
-          path: reports/
+          path: reports/*.json
+          retention-days: 30
