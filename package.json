@@ -11,12 +11,13 @@
     "start": "next start -p 3100",
     "assets": "node scripts/generate-assets.mjs",
     "test:e2e": "playwright test",
-    "impact": "node scripts/impact-trace.mjs",
-    "impact:home": "node scripts/impact-trace.mjs --url http://localhost:3100/ --output reports/home.json",
-    "impact:compare": "node scripts/impact-trace.mjs --url http://localhost:3100/products --url http://localhost:3100/legacy/products --output reports/compare.json",
-    "impact:journey:optimised": "node scripts/impact-trace.mjs impact-trace/journeys/optimisedCheckout.ts --compare-cache --output reports/journey-optimised.json",
-    "impact:journey:legacy": "node scripts/impact-trace.mjs impact-trace/journeys/legacyCheckout.ts --compare-cache --output reports/journey-legacy.json",
-    "impact:journey:browse": "node scripts/impact-trace.mjs impact-trace/journeys/browseCatalogue.ts --output reports/journey-browse.json",
+    "reports:dir": "node -e \"require('node:fs').mkdirSync('reports',{recursive:true})\"",
+    "impact": "impact-trace run",
+    "impact:home": "npm run reports:dir && impact-trace run --url http://localhost:3100/ --output reports/home.json",
+    "impact:compare": "npm run reports:dir && impact-trace run --url http://localhost:3100/products --url http://localhost:3100/legacy/products --output reports/compare.json",
+    "impact:journey:optimised": "npm run reports:dir && impact-trace run impact-trace/journeys/optimisedCheckout.ts --compare-cache --output reports/journey-optimised.json",
+    "impact:journey:legacy": "npm run reports:dir && impact-trace run impact-trace/journeys/legacyCheckout.ts --compare-cache --output reports/journey-legacy.json",
+    "impact:journey:browse": "npm run reports:dir && impact-trace run impact-trace/journeys/browseCatalogue.ts --output reports/journey-browse.json",
     "impact:all": "npm run impact:journey:optimised && npm run impact:journey:legacy && npm run impact:journey:browse"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.50.0",
+    "@transform-uk/impact-trace": "github:TransformCore/impact-trace",
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

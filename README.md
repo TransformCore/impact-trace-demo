@@ -48,8 +48,14 @@ The config starts the production server for you. Eight tests cover:
 
 ## Running ImpactTrace
 
-ImpactTrace is not on npm yet, so `scripts/impact-trace.mjs` clones it into `.impact-trace/`,
-builds it once, and forwards arguments to `impact-trace run`. With the site running:
+ImpactTrace is not on npm yet, but its repo has a `prepare` script, so it installs and builds
+straight from GitHub as a dev dependency:
+
+```json
+"@transform-uk/impact-trace": "github:TransformCore/impact-trace"
+```
+
+That puts an `impact-trace` binary on the path. With the site running:
 
 ```bash
 npm run impact:home                 # single URL
@@ -67,7 +73,8 @@ npm run impact -- --url http://localhost:3100/legacy/products --verbose --no-cpu
 npm run impact -- impact-trace/journeys/legacyCheckout.ts --format github-pr
 ```
 
-JSON reports land in `reports/`.
+JSON reports land in `reports/`. The CLI does not create the output directory itself, so the
+scripts run `npm run reports:dir` first.
 
 ## How the journeys are shared
 
@@ -118,5 +125,5 @@ lib/products.ts           Catalogue data
 journeys/flows.ts         Shared user journeys
 impact-trace/journeys/    ImpactTrace entry points wrapping the shared flows
 tests/                    Playwright specs
-scripts/                  Asset generator and the ImpactTrace CLI wrapper
+scripts/                  Asset generator
 ```
