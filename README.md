@@ -127,3 +127,15 @@ impact-trace/journeys/    ImpactTrace entry points wrapping the shared flows
 tests/                    Playwright specs
 scripts/                  Asset generator
 ```
+
+## Contributing
+
+Bug reports, documentation improvements, and pull requests are welcome. Please keep changes
+focused and run `npm run build` and `npm run test:e2e` before opening a pull request.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution checklist and [SECURITY.md](SECURITY.md)
+for reporting security issues.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

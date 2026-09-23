@@ -32,15 +32,15 @@ jobs:
           done
 
       # The same journeys the Playwright specs assert on, measured for carbon.
-      - name: ImpactTrace — optimised checkout
+      - name: ImpactTrace - optimised checkout
         run: npm run impact:journey:optimised
 
       # Expected to fail its budgets: that is the point of the legacy storefront.
-      - name: ImpactTrace — legacy checkout
+      - name: ImpactTrace - legacy checkout
         run: npm run impact:journey:legacy
         continue-on-error: true
 
-      - name: ImpactTrace — PR comment output
+      - name: ImpactTrace - PR comment output
         run: npx impact-trace run impact-trace/journeys/optimisedCheckout.ts --format github-pr
 
       - uses: actions/upload-artifact@v4

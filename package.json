@@ -1,8 +1,25 @@
 {
   "name": "impact-trace-demo",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
+  "license": "MIT",
   "description": "A sample Next.js storefront used to demonstrate ImpactTrace carbon estimation across user journeys.",
+  "author": "Ashley Ward",
+  "keywords": [
+    "impact-trace",
+    "carbon-aware",
+    "web-performance",
+    "next.js",
+    "playwright"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TransformCore/impact-trace-demo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TransformCore/impact-trace-demo/issues"
+  },
+  "homepage": "https://github.com/TransformCore/impact-trace-demo#readme",
   "scripts": {
     "prebuild": "node scripts/generate-assets.mjs",
     "predev": "node scripts/generate-assets.mjs",
