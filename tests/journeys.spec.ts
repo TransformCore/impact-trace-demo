@@ -15,6 +15,7 @@ test('home page offers both storefronts', async ({ page }) => {
 test('discovery journey: browse the optimised catalogue', async ({ page }) => {
   await browseCatalogue(page, 'optimised');
 
+  await expect(page.getByTestId('seasonal-promo')).toBeVisible();
   await expect(page.getByTestId('product-grid')).toBeVisible();
   await expect(page.getByTestId('product-grid').locator('article')).toHaveCount(6);
 });

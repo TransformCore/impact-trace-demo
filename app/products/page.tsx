@@ -14,6 +14,21 @@ export default function ProductsPage() {
         pipeline.
       </p>
 
+      <section className="seasonal-promo" data-testid="seasonal-promo">
+        <Image
+          src="/optimised/hero.png"
+          alt="Green abstract landscape"
+          width={1200}
+          height={700}
+          priority
+          unoptimized
+        />
+        <div>
+          <strong>Autumn layers have landed</strong>
+          <span>Built for cooler trails and changeable skies.</span>
+        </div>
+      </section>
+
       <div className="grid" data-testid="product-grid">
         {products.map((product) => (
           <article className="card" key={product.slug} data-testid={`product-${product.slug}`}>
