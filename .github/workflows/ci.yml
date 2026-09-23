@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+
+      - name: Playwright journeys
+        run: npm run test:e2e
+
+      - name: Start the site
+        run: |
+          npm run build
+          npm run start &
+          for _ in $(seq 1 60); do
+            curl -sf http://localhost:3100/ > /dev/null && break
+            sleep 1
+          done
+
+      # The same journeys the Playwright specs assert on, measured for carbon.
+      - name: ImpactTrace — optimised checkout
+        run: npm run impact:journey:optimised
+
+      # Expected to fail its budgets: that is the point of the legacy storefront.
+      - name: ImpactTrace — legacy checkout
+        run: npm run impact:journey:legacy
+        continue-on-error: true
+
+      - name: ImpactTrace — PR comment output
+        run: node scripts/impact-trace.mjs impact-trace/journeys/optimisedCheckout.ts --format github-pr
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: impact-trace-reports
+          path: reports/

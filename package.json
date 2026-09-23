@@ -1,0 +1,34 @@
+{
+  "name": "impact-trace-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A sample Next.js storefront used to demonstrate ImpactTrace carbon estimation across user journeys.",
+  "scripts": {
+    "prebuild": "node scripts/generate-assets.mjs",
+    "predev": "node scripts/generate-assets.mjs",
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "assets": "node scripts/generate-assets.mjs",
+    "test:e2e": "playwright test",
+    "impact": "node scripts/impact-trace.mjs",
+    "impact:home": "node scripts/impact-trace.mjs --url http://localhost:3100/ --output reports/home.json",
+    "impact:compare": "node scripts/impact-trace.mjs --url http://localhost:3100/products --url http://localhost:3100/legacy/products --output reports/compare.json",
+    "impact:journey:optimised": "node scripts/impact-trace.mjs impact-trace/journeys/optimisedCheckout.ts --compare-cache --output reports/journey-optimised.json",
+    "impact:journey:legacy": "node scripts/impact-trace.mjs impact-trace/journeys/legacyCheckout.ts --compare-cache --output reports/journey-legacy.json",
+    "impact:journey:browse": "node scripts/impact-trace.mjs impact-trace/journeys/browseCatalogue.ts --output reports/journey-browse.json",
+    "impact:all": "npm run impact:journey:optimised && npm run impact:journey:legacy && npm run impact:journey:browse"
+  },
+  "dependencies": {
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

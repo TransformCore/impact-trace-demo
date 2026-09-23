@@ -1,0 +1,25 @@
+{
+  "cpuWatts": 20,
+  "cpuMeasurementSeconds": 3,
+  "returnVisitorRatio": 0.75,
+  "greenHostingFactor": 0,
+  "reporting": {
+    "budgets": {
+      "carbonGrams": 0.1,
+      "transferMb": 1,
+      "cpuSeconds": 1,
+      "thirdPartyMb": 0.1
+    },
+    "scoreThresholds": {
+      "A": 0.05,
+      "B": 0.1,
+      "C": 0.25,
+      "D": 0.5,
+      "E": 1
+    },
+    "output": {
+      "defaultFormat": "console",
+      "findingsLimit": 5
+    }
+  }
+}
